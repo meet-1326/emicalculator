@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">EMI Calculator</string>
+    <string name="req">*required</string>
+</resources>
