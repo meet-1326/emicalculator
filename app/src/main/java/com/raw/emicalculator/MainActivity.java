@@ -3,7 +3,6 @@ package com.raw.emicalculator;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,7 +12,7 @@ import java.text.DecimalFormat;
 
 public class MainActivity extends AppCompatActivity {
 
-    float  amount=0,interest=0,year=0,m,ans,r;
+    float  amount,interest,year,ans,final_r;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         EditText edamount,edint,edyear;
-        TextView tvint,tvpri,tvtotal,tvemi;
+        TextView tvint,tvpri,tvtotal;
         Button breset,bcal;
 
         edamount = findViewById(R.id.edamount);
@@ -43,36 +42,32 @@ public class MainActivity extends AppCompatActivity {
                 interest = Float.parseFloat(edint.getText().toString());
                 year = Float.parseFloat(edyear.getText().toString());
 
-                m = year*12;
-                r = interest/12;
+                interest = interest/(12*100);
 
-                ans = (amount*r)/100;
+                final_r = 1.0f;
+                for (int i = 0; i < year*12; i++) {
+                    final_r = final_r*(1+interest);
+                }
 
-                tvint.setText(""+ans);
-                tvpri.setText(""+amount);
+                ans = amount*interest*(final_r/(final_r-1));
 
                 DecimalFormat d = new DecimalFormat("0.##");
 
-                tvtotal.setText(""+amount+" + "+ans+" = "+(amount+ans)+"\nMonth Payment = "+((amount+ans)/m));
+                tvint.setText(""+ans);
+                tvpri.setText(""+(amount+ans));
+                tvtotal.setText("Monthly Payment :"+(amount+ans)/(year*12));
+
             }
         });
         breset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                amount=0;
-                interest=0;
-                year=0;
-                m=0;
-                ans=0;
-                r=0;
-
                 tvint.setText("");
                 tvpri.setText("");
                 tvtotal.setText("");
                 edamount.setText("");
                 edint.setText("");
                 edyear.setText("");
-
             }
         });
     }
